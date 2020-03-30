@@ -1,5 +1,4 @@
-A minimal electron with react setup using webpack.
-
+Katha, a place to pour all your feelings.
 ### To run the app
 
 `npm run start`
