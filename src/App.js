@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'; 
-import ReactDOM from "react-dom";
-import Layout from './components/Layout';
+import {Layout} from './components/Layout';
 
 const App = () => {
   return <div>
