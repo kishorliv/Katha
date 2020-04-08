@@ -4,28 +4,20 @@ import { Story } from './Story';
 
 const stories = [
     {
-        "title": "this is a title",
-        "text": "lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem"
+        "title": "this is fa title",
+        "contentHtml": "<p>lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem</p>"
     },
     {
-        "title": "my title",
-        "text": "lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem"
+        "title": "my titdfle",
+        "contentHtml": "<u>lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem</u>"
     },
     {
-        "title": "this is a title",
-        "text": "lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem"
+        "title": "this is a dtitle",
+        "contentHtml": "<p>lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem</p>"
     },
     {
-        "title": "my title",
-        "text": "lorem ipsum dolor is this dolor emet amet corona oh my lorem"
-    },
-    {
-        "title": "this is a title",
-        "text": "lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem"
-    },
-    {
-        "title": "my title",
-        "text": "lorem ipsum dolor is this dolor emet amet corona oh my lorem"
+        "title": "my titled",
+        "contentHtml": "<b>lorem ipsum dolor is this dolor emet amet corona oh my lorem</b>"
     },
 ];
 
@@ -33,6 +25,7 @@ class StoryList extends React.Component{
     constructor(props){
         super(props);
         this.state = {};
+        // TODO: api call to fetch stories
     }
 
     render(){
@@ -40,7 +33,7 @@ class StoryList extends React.Component{
             <CardColumns>
                 {stories.map((story) => {
                     return(
-                        <Story title={story.title} text={story.text} />
+                        <Story title={story.title} contentHtml={story.contentHtml} key={story.title}/>
                     );
                 })}
             </CardColumns>
