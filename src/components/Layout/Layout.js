@@ -1,17 +1,20 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import './layout.scss';
 import { Sidebar } from '../Sidebar';
+import { StoryList, StoryPreviewArea } from '../StoryList';
+import { CreateStory } from '../CreateStory';
+import './layout.scss';
 import Logo from '../../assets/icons/logo.png';
-import { StoryList } from '../StoryList';
+
 
 const MainArea = () => {
   return (
     <div>
       <Switch>
         <Route path="/dashboard" component={Dashboard} />
-        <Route path="/stories" component={StoryList} />
-        <Route path="/create" component={Create} />
+        <Route exact path="/stories" component={StoryList} />
+        <Route path="/stories/:title" component={StoryPreviewArea} />
+        <Route path="/create" component={CreateStory} />
         <Dashboard />
       </Switch>
     </div>
@@ -23,19 +26,6 @@ const Dashboard = () => {
     <p>Dashboard Component</p>
   );
 };
-
-// const Stories = () => {
-//   return(
-//     <p>Stories Component</p>
-//   );
-// };
-
-const Create = () => {
-  return(
-    <p>Create Component</p>
-  );
-};
-
 
 class Layout extends React.Component {
   constructor(props) {
@@ -69,9 +59,7 @@ class Layout extends React.Component {
                     </h3>
                   </div>
                   <div className='sidebar-content'>
-                      <p>
-                        <Sidebar />
-                      </p>
+                    <Sidebar />
                   </div>
               </div>
           </div>
@@ -94,4 +82,4 @@ class Layout extends React.Component {
   }
 }
 
-export default Layout;
+export { Layout };
