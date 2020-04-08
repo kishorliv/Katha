@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SidebarItem from './SidebarItem';
+import { SidebarItem } from './SidebarItem';
 import './style.css';
 
 
