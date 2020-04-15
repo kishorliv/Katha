@@ -4,8 +4,8 @@ import { SidebarItem } from './SidebarItem';
 import './style.css';
 
 
-const Sidebar = () => {
-    const state = {
+class Sidebar extends React.Component {
+    state = {
         items:[
             {
                 img: "dashboard-icon.png",
@@ -27,19 +27,34 @@ const Sidebar = () => {
             },
     ]};
 
-    return(
-        <div className="sidenav">
-            {state.items.map(({path, label, img, active}, i) => {
-                return(
-                    <Link to={`/${path}`} key={label}>
-                        <SidebarItem key={label+`${i}`} label={label} img={img} active={active} />
-                    </Link>
-                ); 
-            })}
 
-            
-        </div>
-    );
+    onClickItem = (id) => {
+        var newItems = JSON.parse(JSON.stringify(this.state.items));    //deep copy of array
+        newItems.forEach( (item, i) => {
+            item.active = i === id ? true : false;
+        });
+        this.setState({
+            items: [...newItems]
+        })
+    }
+
+
+    render(){
+        const {items} = this.state;
+        return(
+            <div className="sidenav">
+                {items.map(({path, label, img, active}, i) => {
+                    return(
+                        <Link to={`/${path}`} key={label}>
+                            <SidebarItem key={label+`${i}`} index={i} clicked={this.onClickItem}label={label} img={img} active={active} />
+                        </Link>
+                    ); 
+                })}
+
+                
+            </div>
+        );
+    }
 }
 
 export { Sidebar };
