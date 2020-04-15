@@ -5,28 +5,25 @@ import { Editor } from '../Editor';
 const Form = ({ 
                 handleSubmit,
                 title, 
-                handleTitleChange,
                 description,
-                handleDescriptionChange,
                 author,
-                handleAuthorChange,
                 tags,
-                handleTagsChange 
+                handleChange 
 }) => {
     return(
         <div>
             <form onSubmit={handleSubmit}>
                 <label>Title</label>
                 <br />
-                <input type="text" value={title} onChange={handleTitleChange} />
+                <input type="text" name='title' value={title} onChange={handleChange} />
                 <br /><br />
                 <label>Description</label>
                 <br />
-                <input type="text" value={description} onChange={handleDescriptionChange} />
+                <input type="text" name='description' value={description} onChange={handleChange} />
                 <br /><br />
                 <label>Author</label>
                 <br />
-                <input type="text" value={author} onChange={handleAuthorChange} />
+                <input type="text" name='author' value={author} onChange={handleChange} />
                 <br /><br />
                 <label>Write</label>
                 <div className="ckeditor">
@@ -35,7 +32,7 @@ const Form = ({
                 <br /><br />
                 <label>Tags</label>
                 <br />
-                <input type="text" value={tags} onChange={handleTagsChange} />
+                <input type="text" name='tags' value={tags} onChange={handleChange} />
                 <br /><br />
                 <input type="submit" value="Submit" />
             </form>
