@@ -14,9 +14,9 @@ class CreateStory extends React.Component{
 
     handleSubmit = (event) => {
         // TODO: POST api call to add data
+        event.preventDefault();
         console.log('Submitted.');
         console.log(this.state);
-        event.preventDefault();
     };
 
     handleChange = (e) => {
