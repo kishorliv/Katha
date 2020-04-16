@@ -23,11 +23,11 @@ class Editor extends React.Component{
 
     render(){
         return(
-            <div>
-                <div>
+            <div className='row'>
+                <div className='col-md-8'>
                     <CKEditor
                         editor={ ClassicEditor }
-                        data="<p>Start pouring!</p>"
+                        data="<p><i>Start pouring!</i></p>"
                         onInit={ editor => {
                             console.log('editor initialized.');  
                         } }
@@ -36,10 +36,11 @@ class Editor extends React.Component{
                         } }
                     />
                 </div>
+                <div className='col-md-4'></div>
                 <div>
                     {/* {renderMarkup(this.state.html)} */}
                     <Preview htmlString={this.state.html} />
-                    {console.log(this.state.html)}
+                    {/* {console.log(this.state.html)} */}
                 </div>
             </div>
         );

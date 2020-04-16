@@ -2,25 +2,28 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { SidebarItem } from './SidebarItem';
 import './style.css';
+import DashboardIcon from '../../assets/icons/dashboard-icon.png';
+import HomeIcon from '../../assets/icons/home-icon.png';
+import CreateIcon from '../../assets/icons/create-icon.png';
 
 
 class Sidebar extends React.Component {
     state = {
         items:[
             {
-                img: "dashboard-icon.png",
+                img: DashboardIcon,
                 label: "Dashboard",
                 path: "dashboard",
                 active: true
             },
             {
-                img: "home-icon.png",
+                img: HomeIcon,
                 label: "Stories",
                 path: "stories",
                 active: false
             },
             {
-                img: "create-icon.png",
+                img: CreateIcon,
                 label: "Create",
                 path: "create",
                 active: false
