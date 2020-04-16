@@ -46,7 +46,7 @@ class Sidebar extends React.Component {
                 {items.map(({path, label, img, active}, i) => {
                     return(
                         <Link to={`/${path}`} key={label}>
-                            <SidebarItem key={label+`${i}`} index={i} clicked={this.onClickItem}label={label} img={img} active={active} />
+                            <SidebarItem key={label+`${i}`} index={i} clicked={this.onClickItem} label={label} img={img} active={active} />
                         </Link>
                     ); 
                 })}
