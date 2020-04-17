@@ -15,6 +15,7 @@ const MainArea = () => {
         <Route exact path="/stories" component={StoryList} />
         <Route path="/stories/:title" component={StoryPreviewArea} />
         <Route path="/create" component={CreateStory} />
+        <Route exact path='/edit/:id' component={CreateStory} />
         <Dashboard />
       </Switch>
     </div>

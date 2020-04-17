@@ -12,8 +12,17 @@ class CreateStory extends React.Component{
         };
     }
 
+
+    componentDidMount() {
+        const {id} = this.props.match.params;
+        console.log(id);
+        //fetch api data and update state data accordingly
+    }
+
+
     handleSubmit = (event) => {
         // TODO: POST api call to add data
+        //check this.props.location.pathname. If it contains edit then send PUT request, else send POST req.
         event.preventDefault();
         console.log('Submitted.');
         console.log(this.state);

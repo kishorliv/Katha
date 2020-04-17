@@ -32,7 +32,7 @@ class Editor extends React.Component{
                             console.log('editor initialized.');  
                         } }
                         onChange={ ( event, editor ) => {
-                            this.setState({html: editor.getData()});
+                             this.setState({html: editor.getData()}); 
                         } }
                     />
                 </div>
