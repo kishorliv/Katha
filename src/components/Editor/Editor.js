@@ -21,14 +21,25 @@ class Editor extends React.Component{
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps){
+        // console.log("EDITOR RECEIVED " + nextProps);
+        if(nextProps.content){
+            this.setState({html: nextProps.content});
+            // this.forceUpdate();
+        }
+        
+    }
+
+
     render(){
         return(
             <div className='row'>
                 <div className='col-md-8'>
                     <CKEditor
                         editor={ ClassicEditor }
-                        data="<p><i>Start pouring!</i></p>"
+                        data=""
                         onInit={ editor => {
+                            {this.state.html ? editor.setData(this.state.html) : editor.setData("<p>Pour your feelings here</p>")};
                             console.log('editor initialized.');  
                         } }
                         onChange={ ( event, editor ) => {

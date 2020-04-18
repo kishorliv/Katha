@@ -8,14 +8,27 @@ class CreateStory extends React.Component{
             title: "",
             description: "",
             author: "",
-            tags: ""
+            tags: "",
+            content: "",
         };
     }
 
 
     componentDidMount() {
         const {id} = this.props.match.params;
-        console.log(id);
+        if(id !== undefined){
+            console.log("edit"+id);
+            this.setState({
+                title: "Post1",
+                description: "This is a post to be edited",
+                author: "mahesh",
+                tags: "nepal blog",
+                content: "<h1>Welcome</h1><p>Hello Bye!</p>"
+            });
+        }
+        else{
+            console.log("CREATE");
+        }
         //fetch api data and update state data accordingly
     }
 
@@ -35,6 +48,7 @@ class CreateStory extends React.Component{
     }
 
     render(){
+        console.log(this.state);
         return(
             <Form 
                 handleSubmit={this.handleSubmit} 
@@ -42,6 +56,7 @@ class CreateStory extends React.Component{
                 description={this.state.description}
                 author={this.state.author}
                 tags={this.state.tags}
+                content={this.state.content}
                 handleChange={this.handleChange}
                 />
         );
