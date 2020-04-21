@@ -1,12 +1,14 @@
 const User = require('./user.model');
 
 module.exports = {
-    add,
+    create,
     getAll,
     getById,
+    getUserPosts,
+    updateUser
 };
 
-async function add(userData){
+async function create(userData){
     if(await User.findOne({email: userData.email})){
         throw new Error('User with same email already exists!');
     }
@@ -17,12 +19,24 @@ async function add(userData){
 }
 
 async function getAll(){
-    return await User.find().populate('posts').exec((err, user) => {
-        if(err) throw new Error('Populating posts failed. Error: ', err);
-        console.log('Populating posts successful: ', user);
-    });
+    return await User.find();
 }
 
 async function getById(id){
-    return await User.findById(id);
+    return await User.findById(id).populate('posts');
+}
+
+async function getUserPosts(id){
+    return await User.findById(id).select('posts').populate('posts');
+}
+
+async function updateUser(id, userData){
+    return await User.findByIdAndUpdate(
+        id, 
+        {$set: {...userData}},
+        {new: true},
+        (err, user) => {
+            if(err) throw new Error('Could not update user with id: ', id);
+        }
+    );
 }

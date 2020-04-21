@@ -31,6 +31,12 @@ const User = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Post'
     }],
+    authId: {
+        type: String
+    }
+}, 
+{
+    timestamps: true
 });
 
 module.exports = mongoose.model('User', User);
