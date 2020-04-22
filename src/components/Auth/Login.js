@@ -75,6 +75,7 @@ class Login extends React.Component {
     }
     e.preventDefault();
     console.log(this.state);
+    //remember me feature
     if(this.state.remember){
       localStorage.setItem('username', this.state.username);
       localStorage.setItem('password', this.state.password);
