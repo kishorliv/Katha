@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 
 const firebaseObj = firebase.initializeApp({
-    apiKey: "",
+    apiKey: "AIzaSyCYr1O1Jwwbe4MrCkWdCqC5rEMlx3JF2VQ",
     authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
     databaseURL: process.env.REACT_APP_FIREBASE_DB,
     projectId: process.env.REACT_APP_FIREBASE_PRJ_ID,

@@ -9,14 +9,17 @@ function getToken(){
           const res = JSON.parse(user);
           const key = ['apiKey', 'uid'];
           const hayStack = Object.keys(res);
-          key.forEach(e => {
-            if(!hayStack.includes(e)){
+          var index = 0;
+          while(index < key.length){
+            if(!hayStack.includes(key[index])){
               return false;
             }
-          });
+            index++;
+          }
           return true;
         }
-        catch{
+        catch (e) {
+          console.log(e);
           return false;
         }
     }
