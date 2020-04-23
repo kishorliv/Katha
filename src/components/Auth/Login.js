@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import fireAuth from '../../utils/firebase';
+import 'firebase/auth';
+import { getToken } from './PrivateRoute';
 
 const redColor = {
   color: 'red',
@@ -45,6 +48,12 @@ class Login extends React.Component {
   }
 
   componentDidMount () {
+    //if already logged in, redirect
+    if(getToken()){
+      this.props.history.push('/');
+    }
+
+
     // check if remember me feature was checked and load forms accordingly
     let name = localStorage.getItem('username');
     let password = localStorage.getItem('password');
@@ -65,15 +74,21 @@ class Login extends React.Component {
   }
 
   formSubmit = (e) => {
-    //api post request
-    //if invalid set and display error
-    if(this.state.username === 'error'){
-      this.setState({err: "Invalid username or password!!"});
-    }
-    else{
-      this.setState({err: ""});
-    }
     e.preventDefault();
+    //api post request
+    // fireAuth.signOut();
+    fireAuth.signInWithEmailAndPassword(this.state.username, this.state.password)
+      .then(res =>{
+        console.log(res);
+        this.setState({err: ""});
+        setTimeout(()=>{this.props.history.push('/');}, 500);
+        
+      })
+      .catch(err => {
+        this.setState({err: "Invalid username or password!!"});
+      })
+    
+    
     console.log(this.state);
     //remember me feature
     if(this.state.remember){

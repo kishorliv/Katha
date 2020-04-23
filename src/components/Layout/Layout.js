@@ -5,6 +5,8 @@ import { StoryList, StoryPreviewArea } from '../StoryList';
 import { CreateStory } from '../CreateStory';
 import './layout.scss';
 import Logo from '../../assets/icons/logo.png';
+import 'firebase/auth';
+import fireAuth from '../../utils/firebase';
 
 
 const MainArea = () => {
@@ -21,6 +23,8 @@ const MainArea = () => {
     </div>
   )
 }
+
+
 
 const Dashboard = () => {
   return(
@@ -40,6 +44,12 @@ class Layout extends React.Component {
   toggleSidebar = (event) => {
     let key = `${event.currentTarget.parentNode.id}Open`;
     this.setState({ [key]: !this.state[key] });
+  }
+
+  
+  logOut = (e) => {
+    fireAuth.signOut();
+    setTimeout(()=>{this.props.history.push(window.location.pathname)}, 500);
   }
 
   render() {
@@ -72,6 +82,7 @@ class Layout extends React.Component {
                   `}>
                   </h3> */}
                   <img src={Logo} alt="" />
+                  <div className='float-right m-auto'><button className='btn-danger' id='logout' onClick={this.logOut}>Log Out</button></div>
               </div>
               <div className='content'>
                   <MainArea />
