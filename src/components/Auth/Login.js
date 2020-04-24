@@ -1,50 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import fireAuth from '../../utils/firebase';
 import 'firebase/auth';
+
+import {LoginForm} from './LoginForm';
 import { getToken } from './PrivateRoute';
-
-const redColor = {
-  color: 'red',
-}
-
-const LoginForm = (props) => {
-  return (
-    <form id="login-form" className="form" onSubmit={props.submit}>
-      <h3 className="text-center text-info">Login</h3>
-      <div className="form-group">
-          <label htmlFor="username" className="text-info">Username:</label><br />
-          <input type="text" name="username" value={props.uName} required className="form-control" onChange={props.changed} />
-      </div>
-      <div className="form-group">
-          <label htmlFor="password" className="text-info">Password:</label><br />
-          <input type="password" name="password" value={props.pwd} required className="form-control" onChange={props.changed} />
-      </div>
-      <div className="form-group">
-          <label htmlFor="remember" className="text-info">
-            <span><input value={props.remember} onChange={props.cbChange} name="remember" type="checkbox" /></span> 
-            <span>&nbsp;Remember me</span> 
-          </label>
-          <br />
-          {props.error ? <p style={redColor}> {props.error} </p> : null}
-          <br />
-          <input type="submit" name="submit" className="btn btn-info btn-md" value="submit" />
-      </div>
-      <div id="register-link" className="text-right">
-          <Link className="text-info" to='/signup'>Register here</Link>
-      </div>
-    </form>
-  );
-}
-
+import fireAuth from '../../utils/firebase';
+import {SignupModal} from './SignupModal';
 
 class Login extends React.Component {
-  
   state = {
-    username: "",
+    email: "",
     password: "",
     remember: false,
     err: "",
+    signupModal: false,
+    fName: "",
+    lName: "",
+    signupEmail: "",
+    signupPassword: "",
+    signupConfirmPassword: "",
+    signupErr: "",
   }
 
   componentDidMount () {
@@ -55,11 +29,11 @@ class Login extends React.Component {
 
 
     // check if remember me feature was checked and load forms accordingly
-    let name = localStorage.getItem('username');
+    let email = localStorage.getItem('email');
     let password = localStorage.getItem('password');
-    if(name && password){
+    if(email && password){
       this.setState({
-        username: name,
+        email,
         password: password
       })
     }
@@ -77,7 +51,7 @@ class Login extends React.Component {
     e.preventDefault();
     //api post request
     // fireAuth.signOut();
-    fireAuth.signInWithEmailAndPassword(this.state.username, this.state.password)
+    fireAuth.signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(res =>{
         console.log(res);
         this.setState({err: ""});
@@ -85,30 +59,68 @@ class Login extends React.Component {
         
       })
       .catch(err => {
-        this.setState({err: "Invalid username or password!!"});
+        this.setState({err: "Invalid email or password!!"});
       })
     
     
     console.log(this.state);
     //remember me feature
     if(this.state.remember){
-      localStorage.setItem('username', this.state.username);
+      localStorage.setItem('email', this.state.email);
       localStorage.setItem('password', this.state.password);
     }
     else{
-      localStorage.removeItem('username');
+      localStorage.removeItem('email');
       localStorage.removeItem('password');
     }
   }
 
+  handleSignupShow = () => {
+    this.setState({signupModal: true});
+  }
+
+  signupSubmit = (e) => {
+    e.preventDefault();
+    console.log(this.state);
+
+    //check if passwords match
+    if(this.state.signupConfirmPassword !== this.state.signupPassword){
+      this.setState({signupErr: "Passwords don't match!!"});
+    }
+    else {
+      fireAuth.createUserWithEmailAndPassword(this.state.signupEmail, this.state.signupPassword)
+      .then(res =>{
+        console.log(res);
+        alert("User created successfully");
+        this.setState({
+          err: "", 
+          signupModal: false,
+        });
+        setTimeout(()=>{this.props.history.push('/');}, 500);
+      })
+      .catch(err => {
+        this.setState({signupErr: err.message});
+      })
+    }    
+
+  }
+
   render() {
-    const {username, password, remember, err} = this.state;
+    const {
+      email, password, remember, err, 
+      signupErr, signupModal, fName, lName, signupEmail, signupPassword, signupConfirmPassword
+    } = this.state;
     return (
         <div className="container">
           <div id="login-row" style={{height:'100vh', width:'100%'}} className="row justify-content-center align-items-center">
             <div id="login-box" className="col-md-6 card p-5">
-                <LoginForm changed={this.handleChange} uName={username} 
+                <LoginForm changed={this.handleChange} uName={email} handleSignup={this.handleSignupShow}
                   pwd={password} remember={remember} cbChange={this.cbChange} submit={this.formSubmit} error={err} />
+                
+                <SignupModal fName={fName} lName={lName} signupEmail={signupEmail} signupPass={signupPassword}
+                  signupConfirmPass={signupConfirmPassword} signupSubmit={this.signupSubmit} changed={this.handleChange} 
+                  show={signupModal} err={signupErr} handleClose={()=>this.setState({signupModal:false})} />
+
             </div>
           </div>
         </div>
