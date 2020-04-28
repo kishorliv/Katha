@@ -5,3 +5,6 @@ import React from 'react';
 export function renderMarkup(htmlString){
     return <div dangerouslySetInnerHTML={{ __html: `${htmlString}`}} />
 }
+
+const apiEndpoint = 'http://localhost:9060';
+export {apiEndpoint};

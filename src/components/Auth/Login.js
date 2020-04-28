@@ -1,10 +1,14 @@
 import React from 'react';
 import 'firebase/auth';
+import axios from 'axios';
 
 import {LoginForm} from './LoginForm';
 import { getToken } from './PrivateRoute';
 import fireAuth from '../../utils/firebase';
 import {SignupModal} from './SignupModal';
+
+import {apiEndpoint} from '../../utils/utils';
+
 
 class Login extends React.Component {
   state = {
@@ -79,24 +83,64 @@ class Login extends React.Component {
     this.setState({signupModal: true});
   }
 
+  checkSignupError() {
+    let error = false;
+    if(this.state.signupConfirmPassword !== this.state.signupPassword){
+      this.setState({signupErr: "Passwords don't match!!"});
+      error = true;
+    }
+
+    const reg = new RegExp('^[a-zA-Z].*[\s\.]*$');
+    const testStr = this.state.fName + " " + this.state.lName;
+    if(!reg.test(testStr)){
+      this.setState({signupErr: "Invalid First name or Last name"});
+      error = true;
+    }
+    return error;
+  }
+
   signupSubmit = (e) => {
     e.preventDefault();
     console.log(this.state);
 
-    //check if passwords match
-    if(this.state.signupConfirmPassword !== this.state.signupPassword){
-      this.setState({signupErr: "Passwords don't match!!"});
-    }
-    else {
+    //check if there are form errors
+    // if(!this.checkSignupError()){
+      if(!0){
+      this.setState({signupErr: ""});
+      const reqObj = {
+        fullName: this.state.fName + " " + this.state.lName,
+        email: this.state.signupEmail,
+        authId: "12321",
+      };
+      console.log(reqObj);
       fireAuth.createUserWithEmailAndPassword(this.state.signupEmail, this.state.signupPassword)
       .then(res =>{
         console.log(res);
-        alert("User created successfully");
-        this.setState({
-          err: "", 
-          signupModal: false,
-        });
-        setTimeout(()=>{this.props.history.push('/');}, 500);
+        //create the user in mongo db as well
+        axios
+          .post(
+            apiEndpoint+'/users/create',
+            reqObj,
+          )
+          .then(()=>{
+            this.setState({
+              signupErr: "", 
+              signupModal: false,
+            });
+            setTimeout(()=>{this.props.history.push('/');}, 500);
+          })
+          .catch(err => {
+            console.log(err);
+            this.setState({signupErr: err.message});
+            //could not create that user. so delete it from from firebase as well
+            const user = fireAuth.currentUser;
+            user.delete().then(() => {
+              console.log("user deleted from firebase");
+              localStorage.removeItem('user');
+            }).catch(err => {
+              console.log(err);
+            })
+          });
       })
       .catch(err => {
         this.setState({signupErr: err.message});
