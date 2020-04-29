@@ -1,19 +1,23 @@
 import React from "react";
-import { HashRouter as Router, Route, Switch } from 'react-router-dom'; 
+import { Route, Switch, Redirect } from 'react-router-dom'; 
 import {Layout} from './components/Layout';
-import { Login } from './components/Auth';
-import {PrivateRoute} from './components/Auth/PrivateRoute';
+import { LogIn } from './components/LogIn';
+import { withAuthentication, AuthUserContext } from './components/Session';
 
 const App = () => {
   return (
     <div>
-        <Switch>
-          <Route exact path='/login' component={Login} />
-          <PrivateRoute path='/' component={Layout} />
-          <Route path='' render={() => (<p>Sorry, page not found.</p>)} />
-        </Switch>
+      <AuthUserContext.Consumer>
+        { authUser =>
+            authUser 
+            ? <Layout />
+            :<Redirect to='/login' />
+        }
+        </AuthUserContext.Consumer> 
+        <Route exact path='/login' component={LogIn} />
+        <Route path='' render={() => (<p>Sorry, page not found.</p>)} />
     </div>
   );
 };
 
-export default App;
+export default withAuthentication(App);
