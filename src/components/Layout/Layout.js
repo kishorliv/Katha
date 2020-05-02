@@ -49,34 +49,34 @@ class Layout extends React.Component {
 
     return (
       <div id='layout'>
-      <div id='left' className={leftOpen} >
-          <div className='icon'
-              onClick={this.toggleSidebar} >
-              &equiv;
-          </div>
-          <div className={`sidebar ${leftOpen}`} >
-              <div className='header'>
-                <h3 className='title'>
-                  Asmita Gaire
-                </h3>
-              </div>
-              <div className='sidebar-content'>
-                <Sidebar />
-              </div>
-          </div>
+        <div id='left' className={leftOpen} >
+            <div className='icon'
+                onClick={this.toggleSidebar} >
+                &equiv;
+            </div>
+            <div className={`sidebar ${leftOpen}`} >
+                <div className='header'>
+                  <h3 className='title'>
+                    Asmita Gaire
+                  </h3>
+                </div>
+                <div className='sidebar-content'>
+                  <Sidebar />
+                </div>
+            </div>
+        </div>
+        <div id='main'>
+            <div className='header'>
+                <img src={Logo} alt="" />
+                <div className='float-right m-auto'>
+                  <LogOut />
+                </div>
+            </div>
+            <div className='content'>
+                <MainArea />
+            </div>
+        </div>
       </div>
-      <div id='main'>
-          <div className='header'>
-              <img src={Logo} alt="" />
-              <div className='float-right m-auto'>
-                <LogOut />
-              </div>
-          </div>
-          <div className='content'>
-              <MainArea />
-          </div>
-      </div>
-  </div>
     );
   }
 }
