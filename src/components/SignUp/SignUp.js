@@ -10,37 +10,38 @@ class SignUpBase extends Component {
 
     this.state = {
         fullName: '',
-        signUpEmail: '',
-        signUpPass: '',
-        signUpConfirmPass: '',
-        showModal: true,
+        email: '',
+        password: '',
+        confirmPassword: '',
+        showModal: this.props.showSignUp, //TODO: find a better way to solve this. mabe use redux
         error: null
     };
   }
 
   onSubmit = event => {
-    const { email, signupPass, signupConfirmPass } = this.state;
+    const { email, password, confirmPassword } = this.state;
 
+    // TODO: Really??
     // validate passwords
-    if(signUpPass !== signupConfirmPass){
+    if(password !== confirmPassword){
       this.setState({error: "Passwords don't match!"}); // TODO: firebase returns error as object, here error used as string, fix this
     }
     else{
       this.props.firebase
-        .signUp(email, signupPass)
+        .signUp(email, password)
         .then(authUser => {
           this.setState({
               fullName: '',
-              signUpEmail: '',
-              signupPass: '',
-              signupConfirmPass: '',
+              email: '',
+              password: '',
+              confirmPassword: '',
               showModal: true,
               error: null
           });
           this.props.history.push(ROUTES.HOME);
         })
         .catch(error => {
-          this.setState({ error });
+          this.setState({ error: error });
         });
     }
 
@@ -51,22 +52,18 @@ class SignUpBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleClose = event => {
-    this.setState({ showModal: false });
-  };
-
   render() {
-    const { fullName, signUpEmail, signUpPass, signUpConfirmPass, showModal, error } = this.state;
+    const { fullName, email, password, confirmPassword, showModal, error } = this.state;
     const onSubmit = this.onSubmit;
     const onChange = this.onChange;
-    const handleClose = this.handleClose;
+    const handleClose = this.props.handleClose;
 
     return (
         <SignUpModal 
             fullName={fullName} 
-            signUpEmail={signUpEmail} 
-            signUpPass={signUpPass}
-            signUpConfirmPass={signUpConfirmPass} 
+            email={email} 
+            password={password}
+            confirmPassword={confirmPassword} 
             showModal={showModal} 
             error={error} 
             onSubmit={onSubmit} 
