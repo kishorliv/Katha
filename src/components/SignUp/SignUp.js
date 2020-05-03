@@ -12,10 +12,10 @@ class SignUpBase extends Component {
 
     this.state = {
         fullName: '',
-        signUpEmail: '',
-        signUpPass: '',
-        signUpConfirmPass: '',
-        showModal: true,
+        email: '',
+        password: '',
+        confirmPassword: '',
+        showModal: this.props.showSignUp, //TODO: find a better way to solve this. mabe use redux
         error: null
     };
   }
@@ -24,7 +24,7 @@ class SignUpBase extends Component {
     console.log(authUser);
     const reqObj = {
         fullName: this.state.fullName,
-        email: this.state.signUpEmail,
+        email: this.state.email,
         authId: authUser.user.uid,
     };
     console.log(reqObj);
@@ -37,9 +37,9 @@ class SignUpBase extends Component {
         console.log("POSTED");
         this.setState({
           fullName: '',
-          signUpEmail: '',
-          signUpPass: '',
-          signUpConfirmPass: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
           showModal: true,
           error: null
         });
@@ -60,16 +60,18 @@ class SignUpBase extends Component {
 
 
   onSubmit = event => {
-    const { signUpEmail, signUpPass, signUpConfirmPass } = this.state;
+    event.preventDefault();
+    const { email, password, confirmPassword } = this.state;
 
+    // TODO: Really??
     // validate passwords
-    if(signUpPass !== signUpConfirmPass){
+    if(password !== confirmPassword){
       this.setState({error: "Passwords don't match!"}); // TODO: firebase returns error as object, here error used as string, fix this
     }
     else{
-      console.log(signUpEmail);
+      console.log(email);
       this.props.firebase
-        .signUp(signUpEmail, signUpPass)
+        .signUp(email, password)
         .then(authUser => {
           //create this user in backend as well
           this.createUser(authUser);
@@ -79,29 +81,24 @@ class SignUpBase extends Component {
 
         });
     }
-    event.preventDefault();
   };
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleClose = event => {
-    this.setState({ showModal: false });
-  };
-
   render() {
-    const { fullName, signUpEmail, signUpPass, signUpConfirmPass, showModal, error } = this.state;
+    const { fullName, email, password, confirmPassword, showModal, error } = this.state;
     const onSubmit = this.onSubmit;
     const onChange = this.onChange;
-    const handleClose = this.handleClose;
-
+    const handleClose = this.props.handleClose;
+    console.log(error);
     return (
         <SignUpModal 
             fullName={fullName} 
-            signUpEmail={signUpEmail} 
-            signUpPass={signUpPass}
-            signUpConfirmPass={signUpConfirmPass} 
+            email={email} 
+            password={password}
+            confirmPassword={confirmPassword} 
             showModal={showModal} 
             error={error} 
             onSubmit={onSubmit} 

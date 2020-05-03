@@ -48,15 +48,19 @@ class LogInBase extends Component {
     this.setState({ showSignUp: true });
   };
 
+  handleClose = event => {
+    this.setState({ showSignUp: false });
+  };
+
   render() {
     const { email, password, error, showSignUp } = this.state;
     const onSubmit = this.onSubmit;
     const onChange = this.onChange;
     const handleSignUpClick = this.handleSignUpClick;
+    const handleClose = this.handleClose;
 
     return (
       <div className="container">
-      {showSignUp ? <SignUp showSignUp={showSignUp} /> : null}
           <div id="login-row" style={{height:'100vh', width:'100%'}} className="row justify-content-center align-items-center">
             <div id="login-box" className="col-md-6 card p-5">
                 <LoginForm 
@@ -67,6 +71,7 @@ class LogInBase extends Component {
                     onSubmit={onSubmit} 
                 />
                 <SignUpLink handleSignUpClick={handleSignUpClick} />
+                {showSignUp ? <SignUp showSignUp={showSignUp} handleClose={handleClose} /> : null}
             </div>
           </div>
         </div>      
