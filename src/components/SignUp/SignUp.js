@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import {apiEndpoint} from '../../constants/urls';
 import { SignUpModal } from './SignUpModal';
+import axios from 'axios';
 
 class SignUpBase extends Component {
   constructor(props) {
@@ -18,32 +20,65 @@ class SignUpBase extends Component {
     };
   }
 
+  createUser = (authUser) => {
+    console.log(authUser);
+    const reqObj = {
+        fullName: this.state.fullName,
+        email: this.state.signUpEmail,
+        authId: authUser.user.uid,
+    };
+    console.log(reqObj);
+    axios
+      .post(
+        apiEndpoint+'/users/create',
+        reqObj,
+      )
+      .then(() => {
+        console.log("POSTED");
+        this.setState({
+          fullName: '',
+          signUpEmail: '',
+          signUpPass: '',
+          signUpConfirmPass: '',
+          showModal: true,
+          error: null
+        });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(err => {
+        console.log("WHAT HAPPENED??");
+        console.log(err);
+        this.setState({error: err.message});
+        //could not create that user. so delete it from from firebase as well
+        authUser.user.delete().then(() => {
+          console.log("user deleted from firebase");
+        }).catch(err => {
+          this.setState({error: err.message});
+        })
+      });
+    }
+
+
   onSubmit = event => {
-    const { email, signupPass, signupConfirmPass } = this.state;
+    const { signUpEmail, signUpPass, signUpConfirmPass } = this.state;
 
     // validate passwords
-    if(signUpPass !== signupConfirmPass){
+    if(signUpPass !== signUpConfirmPass){
       this.setState({error: "Passwords don't match!"}); // TODO: firebase returns error as object, here error used as string, fix this
     }
     else{
+      console.log(signUpEmail);
       this.props.firebase
-        .signUp(email, signupPass)
+        .signUp(signUpEmail, signUpPass)
         .then(authUser => {
-          this.setState({
-              fullName: '',
-              signUpEmail: '',
-              signupPass: '',
-              signupConfirmPass: '',
-              showModal: true,
-              error: null
-          });
-          this.props.history.push(ROUTES.HOME);
+          //create this user in backend as well
+          this.createUser(authUser);
         })
         .catch(error => {
-          this.setState({ error });
+          this.setState({ error: error.message });
+
         });
     }
-
     event.preventDefault();
   };
 
