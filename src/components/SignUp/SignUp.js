@@ -20,6 +20,7 @@ class SignUpBase extends Component {
     };
   }
 
+  // create user in backend
   createUser = (authUser) => {
     console.log(authUser);
     const reqObj = {
@@ -46,7 +47,7 @@ class SignUpBase extends Component {
         this.props.history.push(ROUTES.HOME);
       })
       .catch(err => {
-        console.log("WHAT HAPPENED??");
+        console.log("Could not create user in backend.");
         console.log(err);
         this.setState({error: err.message});
         //could not create that user. so delete it from from firebase as well
@@ -75,10 +76,10 @@ class SignUpBase extends Component {
         .then(authUser => {
           //create this user in backend as well
           this.createUser(authUser);
+          this.setState({ showModal: false});
         })
         .catch(error => {
           this.setState({ error: error.message });
-
         });
     }
   };
