@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 const SignUpModal = ({ 
-    showModal, handleClose, onSubmit, onChange, fullName, signUpEmail, signUpPass, signUpConfirmPass, error
+    showModal, handleClose, onSubmit, onChange, fullName, email, password, confirmPassword, error
   }) => {
     return(
       <Modal show={showModal} onHide={handleClose} animation={false}>
@@ -16,16 +16,16 @@ const SignUpModal = ({
                   <input type="text" name="fullName" required className="form-control" value={fullName} onChange={onChange} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="signUpEmail" className="text-info">Email:</label><br />
-                  <input type="email" name="signUpEmail" required className="form-control" value={signUpEmail} onChange={onChange} />
+                  <label htmlFor="email" className="text-info">Email:</label><br />
+                  <input type="email" name="email" required className="form-control" value={email} onChange={onChange} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="signUpPass" className="text-info">Password:</label><br />
-                  <input type="password" name="signUpPass" required className="form-control" value={signUpPass} onChange={onChange} />
+                  <label htmlFor="password" className="text-info">Password:</label><br />
+                  <input type="password" name="password" required className="form-control" value={password} onChange={onChange} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="signUpConfirmPass" className="text-info">Confirm Password:</label><br />
-                  <input type="password" name="signUpConfirmPass" required className="form-control" value={signUpConfirmPass} onChange={onChange} />
+                  <label htmlFor="confirmPassword" className="text-info">Confirm Password:</label><br />
+                  <input type="password" name="confirmPassword" required className="form-control" value={confirmPassword} onChange={onChange} />
                 </div>
                 {error ? <p> {error} </p> : null}
             </Modal.Body>
