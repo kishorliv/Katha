@@ -14,8 +14,10 @@ const App = () => {
             :<Redirect to='/login' />
         }
         </AuthUserContext.Consumer> 
-        <Route exact path='/login' component={LogIn} />
-        <Route path='' render={() => (<p>Sorry, page not found.</p>)} />
+        <Switch>
+          <Route exact path='/login' component={LogIn} />
+          <Route path='' render={() => (<p>Sorry, page not found.</p>)} />
+        </Switch>
     </div>
   );
 };
