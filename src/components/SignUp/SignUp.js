@@ -22,13 +22,11 @@ class SignUpBase extends Component {
 
   // create user in backend
   createUser = (authUser) => {
-    console.log(authUser);
     const reqObj = {
         fullName: this.state.fullName,
         email: this.state.email,
         authId: authUser.user.uid,
     };
-    console.log(reqObj);
     axios
       .post(
         apiEndpoint+'/users/create',
