@@ -79,7 +79,11 @@ class SignUpBase extends Component {
           this.setState({ showModal: false});
         })
         .catch(error => {
-          this.setState({ error: error.message });
+          this.setState({ 
+            error: error.message,
+            password: '',
+            confirmPassword: '' 
+          });
         });
     }
   };
