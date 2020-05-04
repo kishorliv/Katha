@@ -33,7 +33,10 @@ class LogInBase extends Component {
         this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({ 
+          error: error,
+          password: '' 
+        });
       });
 
     event.preventDefault();
