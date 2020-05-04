@@ -65,7 +65,11 @@ class SignUpBase extends Component {
     // TODO: Really??
     // validate passwords
     if(password !== confirmPassword){
-      this.setState({error: "Passwords don't match!"}); // TODO: firebase returns error as object, here error used as string, fix this
+      this.setState({
+        error: "Passwords don't match!",  // TODO: firebase returns error as object, here error used as string, fix this
+        password: '',
+        confirmPassword: ''
+      }); 
     }
     else{
       console.log(email);
@@ -95,7 +99,6 @@ class SignUpBase extends Component {
     const onSubmit = this.onSubmit;
     const onChange = this.onChange;
     const handleClose = this.props.handleClose;
-    console.log(error);
     return (
         <SignUpModal 
             fullName={fullName} 
