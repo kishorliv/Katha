@@ -8,6 +8,7 @@ const Form = ({
                 description,
                 author,
                 tags,
+                content,
                 handleChange 
 }) => {
     return(
@@ -27,7 +28,7 @@ const Form = ({
                 <br /><br />
                 <label>Write</label>
                 <div className="ckeditor">
-                    <Editor />
+                    <Editor content={content} />
                 </div>
                 <br /><br />
                 <label>Tags</label>

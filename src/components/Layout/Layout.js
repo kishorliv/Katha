@@ -5,6 +5,7 @@ import { StoryList, StoryPreviewArea } from '../StoryList';
 import { CreateStory } from '../CreateStory';
 import './layout.scss';
 import Logo from '../../assets/icons/logo.png';
+import { LogOut } from '../LogOut';
 
 
 const MainArea = () => {
@@ -15,11 +16,13 @@ const MainArea = () => {
         <Route exact path="/stories" component={StoryList} />
         <Route path="/stories/:title" component={StoryPreviewArea} />
         <Route path="/create" component={CreateStory} />
+        <Route exact path='/edit/:id' component={CreateStory} />
         <Dashboard />
       </Switch>
     </div>
   )
 }
+
 
 const Dashboard = () => {
   return(
@@ -46,38 +49,34 @@ class Layout extends React.Component {
 
     return (
       <div id='layout'>
-
-          <div id='left' className={leftOpen} >
-              <div className='icon'
-                   onClick={this.toggleSidebar} >
-                   &equiv;
-              </div>
-              <div className={`sidebar ${leftOpen}`} >
-                  <div className='header'>
-                    <h3 className='title'>
-                      Asmita Gaire
-                    </h3>
-                  </div>
-                  <div className='sidebar-content'>
-                    <Sidebar />
-                  </div>
-              </div>
+      <div id='left' className={leftOpen} >
+          <div className='icon'
+              onClick={this.toggleSidebar} >
+              &equiv;
           </div>
-
-          <div id='main'>
+          <div className={`sidebar ${leftOpen}`} >
               <div className='header'>
-                  {/* <h3 className={`title
-                      ${'left-' + leftOpen}
-                  `}>
-                  </h3> */}
-                  <img src={Logo} alt="" />
+                <h3 className='title'>
+                  Asmita Gaire
+                </h3>
               </div>
-              <div className='content'>
-                  <MainArea />
+              <div className='sidebar-content'>
+                <Sidebar />
               </div>
           </div>
-
       </div>
+      <div id='main'>
+          <div className='header'>
+              <img src={Logo} alt="" />
+              <div className='float-right m-auto'>
+                <LogOut />
+              </div>
+          </div>
+          <div className='content'>
+              <MainArea />
+          </div>
+      </div>
+  </div>
     );
   }
 }
