@@ -60,7 +60,7 @@
   }
   
   // Main area specific style:
-  #main { background: var(--bg-main); flex-grow: 1;
+  #main { background: var(--bg-main); flex-grow: 1; overflow: auto;
     .header { background: var(--bg-header);
       @media (orientation: landscape) {
         .title { transition: left var(--secs), right var(--secs);
