@@ -59,7 +59,7 @@ module.exports = {
         filename: "./index.html"
       }),
       new Dotenv({
-        path: './.env',
+        path: "./.env.dev",
       })
   
     ]  
