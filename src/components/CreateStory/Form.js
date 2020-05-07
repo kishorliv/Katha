@@ -27,8 +27,8 @@ const Form = ({
                 <input type="text" name='author' value={author} onChange={handleChange} />
                 <br /><br />
                 <label>Write</label>
-                <div className="ckeditor">
-                    <Editor content={content} />
+                <div>
+                    <Editor content={content} placeholder={'Start writing here...'}/>
                 </div>
                 <br /><br />
                 <label>Tags</label>

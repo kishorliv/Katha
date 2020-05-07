@@ -1,61 +1,91 @@
-import React from 'react';
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '../../../lib/build/ckeditor'; // path to ckeditor custom build
-import { renderMarkup } from '../../utils/utils'; 
-import { StoryPreviewArea } from '../StoryList';
+import React from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { Preview } from './Preview';
+import './style.css';
 
-const Preview = ({ htmlString }) => {
-    return(
+
+/**
+ * Quill editor component
+ * Takes a prop: placeholder
+ */
+class Editor extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = { 
+      editorHtml: '', 
+      theme: 'snow' 
+    }
+  }
+
+  // TODO: Dont use this later!
+  UNSAFE_componentWillReceiveProps(nextProps){
+    if(nextProps.content){
+        this.setState({editorHtml: nextProps.content});
+    }
+    
+}
+  
+  handleChange = (html) =>  {
+      this.setState({ editorHtml: html });
+  }
+  
+  render () {
+    return (
         <div>
-            <p>Content preview</p>
-            {renderMarkup(htmlString)}
-        </div>
-    );
-};
-
-class Editor extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            html: ``,
-        };
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps){
-        // console.log("EDITOR RECEIVED " + nextProps);
-        if(nextProps.content){
-            this.setState({html: nextProps.content});
-            // this.forceUpdate();
-        }
-        
-    }
-
-
-    render(){
-        return(
-            <div className='row'>
-                <div className='col-md-8'>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        data=""
-                        onInit={ editor => {
-                            {this.state.html ? editor.setData(this.state.html) : editor.setData("<p>Pour your feelings here</p>")};
-                            console.log('editor initialized.');  
-                        } }
-                        onChange={ ( event, editor ) => {
-                             this.setState({html: editor.getData()}); 
-                        } }
-                    />
-                </div>
-                <div className='col-md-4'></div>
-                <div>
-                    {/* {renderMarkup(this.state.html)} */}
-                    <Preview htmlString={this.state.html} />
-                    {/* {console.log(this.state.html)} */}
-                </div>
+            <div>
+                <ReactQuill 
+                    theme={this.state.theme}
+                    onChange={this.handleChange}
+                    value={this.state.editorHtml}
+                    modules={Editor.modules}
+                    formats={Editor.formats}
+                    placeholder={this.props.placeholder}
+                />
             </div>
-        );
-    }
-};
+            <div>
+                <Preview htmlString={this.state.editorHtml} />
+            </div>
+        </div>
+     )
+  }
+}
+
+Editor.modules = {
+  toolbar: [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    ['blockquote', 'code-block', 'link'],
+    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    [{ 'direction': 'rtl' }],                         // text direction
+    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    [{ 'font': [] }],
+    [{ 'align': [] }],
+    ['formula', 'image', 'video'],                    // embeds
+    ['clean']                                         // remove formatting button
+  ],
+
+}
+
+Editor.formats = [
+  'bold', 'italic', 'underline', 'strike', 
+  'blockquote', 'code-block', 'link',
+  'header',
+  'list',
+  'script',
+  'indent',
+  'direction',
+  'size',
+  'header',
+  'color',
+  'background',
+  'font', 
+  'align',
+  'formula',
+  'image',
+]
 
 export { Editor };
