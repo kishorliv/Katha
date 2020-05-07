@@ -5,6 +5,7 @@ import { LoginForm } from './LoginForm';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import Button from 'react-bootstrap/Button';
+import { PasswordForgetLink } from '../PasswordForget';
 
 class LogInBase extends Component {
   constructor(props) {
@@ -72,6 +73,7 @@ class LogInBase extends Component {
                     onChange={onChange}
                     onSubmit={onSubmit} 
                 />
+                <PasswordForgetLink />
                 <SignUpLink handleSignUpClick={handleSignUpClick} />
                 {showSignUp ? <SignUp showSignUp={showSignUp} handleClose={handleClose} /> : null}
             </div>
