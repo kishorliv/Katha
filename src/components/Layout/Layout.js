@@ -6,6 +6,7 @@ import { CreateStory } from '../CreateStory';
 import './layout.scss';
 import Logo from '../../assets/icons/logo.png';
 import { LogOut } from '../LogOut';
+import { withEmailVerification } from '../Session';
 
 
 const MainArea = () => {
@@ -30,7 +31,7 @@ const Dashboard = () => {
   );
 };
 
-class Layout extends React.Component {
+class LayoutBase extends React.Component {
   constructor(props) {
     super(props);
 
@@ -80,5 +81,7 @@ class Layout extends React.Component {
     );
   }
 }
+
+const Layout = withEmailVerification(LayoutBase);
 
 export { Layout };
