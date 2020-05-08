@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'; 
+
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
  
+
 const PasswordForgetPage = () => (
   <div>
     <h1>Reset your password</h1>
@@ -77,4 +79,5 @@ const PasswordForgetLink = () => (
   
 const PasswordForget = withFirebase(PasswordForgetBase);
  
-export { PasswordForget, PasswordForgetLink, PasswordForgetPage };
+export default PasswordForgetPage;
+export { PasswordForget, PasswordForgetLink };
