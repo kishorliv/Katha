@@ -1,9 +1,11 @@
-import React from "react";
-import { Route, Switch, Redirect } from 'react-router-dom'; 
-import {Layout} from './components/Layout';
-import { LogIn } from './components/LogIn';
+import React from 'react';
+import { Route, Redirect } from 'react-router-dom';
+
+import LogInPage from './components/LogIn';
+import LayoutPage from './components/Layout';
+import * as ROUTES from './constants/routes';
+import PasswordForgetPage from "./components/PasswordForget";
 import { withAuthentication, AuthUserContext } from './components/Session';
-import { PasswordForgetPage } from "./components/PasswordForget";
 
 const App = () => {
   return (
@@ -11,12 +13,12 @@ const App = () => {
       <AuthUserContext.Consumer>
         { authUser =>
             authUser 
-            ? <Layout />
-            :<Redirect to='/login' />
+            ? <LayoutPage />
+            : <Redirect to={ROUTES.LOG_IN} />
         }
         </AuthUserContext.Consumer> 
-        <Route exact path='/login' component={LogIn} />
-        <Route exact path='/pwd-forget' component={PasswordForgetPage} />
+        <Route exact path={ROUTES.LOG_IN} component={LogInPage} />
+        <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
     </div>
   );
 };
