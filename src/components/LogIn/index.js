@@ -1,3 +1,4 @@
-import { LogIn } from './LogIn';
+import LogInPage, { LogIn } from './LogIn';
 
+export default LogInPage;
 export { LogIn };
