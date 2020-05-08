@@ -7,6 +7,15 @@ import * as ROUTES from '../../constants/routes';
 import Button from 'react-bootstrap/Button';
 import { PasswordForgetLink } from '../PasswordForget';
 
+/**
+ * Renders LogIn and SignUp modal.
+ */
+const LogInPage = () => {
+  return(
+    <LogIn />
+  );
+};
+
 class LogInBase extends Component {
   constructor(props) {
     super(props);
@@ -93,4 +102,5 @@ return(
 
 const LogIn = withRouter(withFirebase(LogInBase));
 
+export default LogInPage;
 export { LogIn };
