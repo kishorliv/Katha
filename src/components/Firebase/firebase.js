@@ -34,7 +34,7 @@ class Firebase {
 
   verifyEmail = () => {
     return this.auth.currentUser.sendEmailVerification({
-      url: REACT_APP_EMAIL_CONFIRMATION_REDIRECT_URL
+      url: process.env.REACT_APP_EMAIL_CONFIRMATION_REDIRECT_URL
     })
   };
 
