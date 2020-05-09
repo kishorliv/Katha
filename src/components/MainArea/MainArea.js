@@ -2,7 +2,8 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom'; 
 
 import DashboardArea from '../Dashboard';
-import { StoryList, StoryPreviewArea } from '../StoryList';
+import StoryPreviewArea from '../StoryPreviewArea';
+import { StoryList }from '../StoryList';
 import { CreateStory } from '../CreateStory';
 
 
