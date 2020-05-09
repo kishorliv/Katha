@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Preview } from './Preview';
+import { Preview } from '../StoryPreviewArea';
 import './style.css';
 
 
@@ -32,7 +33,7 @@ class Editor extends React.Component {
   
   render () {
     return (
-        <div>
+        <Fragment>
             <div>
                 <ReactQuill 
                     theme={this.state.theme}
@@ -46,7 +47,7 @@ class Editor extends React.Component {
             <div>
                 <Preview htmlString={this.state.editorHtml} />
             </div>
-        </div>
+        </Fragment>
      )
   }
 }
