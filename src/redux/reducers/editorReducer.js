@@ -11,6 +11,8 @@ function editorReducer (state=initialState, action){
         ...state,
         content: action.payload
       }
+    default:
+      return state;
   }
 }
 
