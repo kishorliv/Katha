@@ -3,7 +3,16 @@ import React, { Fragment } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Preview } from '../StoryPreviewArea';
-import './style.css';
+import './style.scss';
+
+
+const resetTimeout = (id, newID) => {	
+	clearTimeout(id)
+	return newID	
+}
+
+const SaveMessage = ({visible}) => 
+  <div className={'saved' + (visible ? ' saved-visible' : '')}><p>Saved Successfully</p></div>
 
 
 /**
@@ -15,7 +24,9 @@ class Editor extends React.Component {
     super(props)
     this.state = { 
       editorHtml: '', 
-      theme: 'snow' 
+      theme: 'snow',
+      saved: false,
+      timeout: null
     }
   }
 
@@ -28,9 +39,23 @@ class Editor extends React.Component {
 }
   
   handleChange = (html) =>  {
-      this.setState({ editorHtml: html });
+    //on every edit clear previous timeout and set new one for 5s
+    this.setState({ 
+      editorHtml: html,
+      timeout: resetTimeout(this.state.timeout, setTimeout(this.saveValue, 5000))
+    });
   }
-  
+
+	
+	saveValue = () => {		
+    localStorage.setItem('content', this.state.editorHtml);
+    this.setState({...this.state, saved: true});
+    //show saveMessage component for 1 sec
+		setTimeout(() => this.setState({...this.state, saved: false}), 1000)		
+	};
+	
+
+
   render () {
     return (
         <Fragment>
@@ -47,6 +72,7 @@ class Editor extends React.Component {
             <div>
                 <Preview htmlString={this.state.editorHtml} />
             </div>
+            <SaveMessage visible={this.state.saved} />
         </Fragment>
      )
   }
