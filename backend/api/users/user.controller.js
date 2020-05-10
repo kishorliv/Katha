@@ -6,6 +6,7 @@ const userService = require('./user.service');
 // routes
 router.get('/', getAll);
 router.get('/:userId', getById);
+router.get('/authId/:authId', getByAuthId);
 router.post('/create', create);
 router.get('/:userId/posts', getUserPosts);
 router.patch('/:userId/update', updateUser);
@@ -21,6 +22,12 @@ function getAll(req, res, next){
 
 function getById(req, res, next){
     userService.getById(req.params.userId)
+    .then(user => user ? res.send(user) : res.status(404).send({message: 'User not found!'}))
+    .catch(err => next(err));  
+}
+
+function getByAuthId(req, res, next){
+    userService.getByAuthId(req.params.authId)
     .then(user => user ? res.send(user) : res.status(404).send({message: 'User not found!'}))
     .catch(err => next(err));  
 }
