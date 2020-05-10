@@ -13,14 +13,18 @@ class StoryPreviewArea extends React.Component{
         super(props);
         this.state = {
             htmlString: '',
-            loading: false
+            loading: false,
+            error: null
         };
     }
 
     componentDidMount(){
         const title = this.props.match.params.title;
 
-        this.setState({ loading: true});
+        this.setState({ 
+            loading: true 
+        });
+
         axios.get(apiEndpoint + '/posts/title/' + title)
              .then((story) => {
                  console.log(story);
@@ -30,17 +34,22 @@ class StoryPreviewArea extends React.Component{
                     });
              })
              .catch((error) => {
-                 this.setState({ error: error});
+                 this.setState({ 
+                     error: error,
+                     loading: false
+                 });
                  console.log('Fetch story by title error: ', error);
              });
     }
 
     render(){
-        const { htmlString } = this.state;
+        const { htmlString, loading, error } = this.state;
 
         return(
             <Fragment>
                 <Preview htmlString={htmlString} />
+                {loading && <p>Loading...</p>}
+                {error && <p>Sorry, could not fetch stories.</p>}
             </Fragment>
         );
     }
