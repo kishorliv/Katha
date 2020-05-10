@@ -22,7 +22,10 @@ class StoryList extends React.Component{
     }
     
     componentDidMount(){
-        this.setState({ loading: true})
+        this.setState({ 
+            loading: true
+        });
+        
         // TODO: api call to fetch stories, might not need to fetch the whole html, just the required props
         axios.get(apiEndpoint + '/posts/')
              .then((stories) => {
@@ -34,7 +37,10 @@ class StoryList extends React.Component{
                     });
              })
              .catch((error) => {
-                 this.setState({ error: error});
+                 this.setState({ 
+                     error: error,
+                     loading: false
+                    });
                  console.log('Fetch story error: ', error);
              });
     }
