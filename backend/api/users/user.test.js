@@ -3,9 +3,9 @@ const app = require('../../app');
 
 // test data
 const userData = {
-    fullName: "Mahesh Sharma",
-    email: "maheshsomething@gmail.com",
-    authId: "foo"
+    fullName: "Gordan Ramsey",
+    email: "gordan@gmail.com",
+    authId: "gordanAuth"
 };
 
 const userData2 = {
@@ -67,6 +67,14 @@ describe("Testing /users route", () => {
     test("Succeeds with valid request(if userId is found)", async (done) => {
         const res =  await request(app)
             .get("/users/5e9ee95ca2df3c36db7d9a71")
+            .expect('Content-Type', /json/);
+            done();
+            console.log(res.text);
+        });
+
+    test("Succeeds with valid request(if authid is found)", async (done) => {
+        const res =  await request(app)
+            .get("/users/authId/gordanAuth")
             .expect('Content-Type', /json/);
             done();
             console.log(res.text);
