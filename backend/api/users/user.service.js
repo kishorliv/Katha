@@ -4,6 +4,7 @@ module.exports = {
     create,
     getAll,
     getById,
+    getByAuthId,
     getUserPosts,
     updateUser
 };
@@ -24,6 +25,11 @@ async function getAll(){
 
 async function getById(id){
     return await User.findById(id).populate('posts');
+}
+
+// returns user by authId(firebase)
+async function getByAuthId(authId){
+    return await User.findOne({ authId: authId});
 }
 
 async function getUserPosts(id){
