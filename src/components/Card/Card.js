@@ -22,7 +22,7 @@ const Card = ({ img, title, text, linkToRead, linkToEdit, linkToDelete }) => {
                     </Link>
                     &nbsp;
                     <Link to={linkToDelete} >
-                        <div className="btn btn-outline-danger btn-sm">
+                        <div className="btn btn-outline-danger btn-sm float-right">
                             Delete
                         </div>
                     </Link>
