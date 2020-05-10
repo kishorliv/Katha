@@ -1,0 +1,15 @@
+.saved {
+  opacity: 0;
+  overflow: hidden;
+  transition: all .3s ease-in-out;
+  border-radius: 3px;
+  
+  &-visible {
+    opacity: .7;
+  }
+  
+  p {
+    margin: 0;
+    padding: 10px;
+  }
+}
