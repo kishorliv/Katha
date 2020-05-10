@@ -4,11 +4,11 @@ const app = require('../../app');
 // test data
 // Assumption: userId is passed in req.body while creating posts
 const postData = {
-  title: "This is a test",
-  description: "sdfdsf",
-  contentHtml: "<p>lorem slkjf dfsdsdf sdfsdfsd sdffjlas dfas skfjlaks skdfj asfj lasfj alskdjf laskdfjklas dflkjas df asdlkf</p>",
-  tags: ['nodejs', 'people'],
-  userId: "5e9eeb7666f33b3b79dd6e84"
+  title: "This is fdg test",
+  description: "ghjhggjgh",
+  contentHtml: "<p>lorem as dflkjas df asdlkf</p>",
+  tags: ['mozilla', 'people'],
+  userId: "5eb809e232279973b2d0dfaa"
 }
 
 const updateData = {
