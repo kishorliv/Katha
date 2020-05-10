@@ -16,7 +16,10 @@ async function create(postData){
         throw new Error('Post with same title already exists!');
     }
     // find the actual user(user id is sent in req.body)
-    const user = await User.findById(postData.userId); // TODO: what to do if user is null, send null itself or ...?
+    const user = await User.findById(postData.userId);
+    if(user === null || user === undefined) {
+        throw new Error('Cannot find user with given user id while creating the post!');
+    }  
 
     // create new post
     const newPost = postData;
