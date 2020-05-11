@@ -9,7 +9,8 @@ const Form = ({
                 author,
                 tags,
                 content,
-                handleChange 
+                handleChange,
+                handleEditorChange
 }) => {
     return(
         <div>
@@ -28,7 +29,7 @@ const Form = ({
                 <br /><br />
                 <label>Write</label>
                 <div>
-                    <Editor content={content} placeholder={'Start writing here...'}/>
+                    <Editor handleEditorChange={handleEditorChange} content={content} placeholder={'Start writing here...'}/>
                 </div>
                 <br /><br />
                 <label>Tags</label>

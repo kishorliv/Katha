@@ -10,6 +10,7 @@ class CreateStory extends React.Component{
             author: "",
             tags: "",
             content: "",
+            editorContent: "",
         };
     }
 
@@ -47,6 +48,11 @@ class CreateStory extends React.Component{
         })
     }
 
+    handleEditorChange = (html) => {
+        console.log(html);
+        this.setState({editorContent: html});
+    }
+
     render(){
         console.log(this.state);
         return(
@@ -58,6 +64,7 @@ class CreateStory extends React.Component{
                 tags={this.state.tags}
                 content={this.state.content}
                 handleChange={this.handleChange}
+                handleEditorChange={this.handleEditorChange}
                 />
         );
     }

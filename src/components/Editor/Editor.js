@@ -29,6 +29,7 @@ class Editor extends React.Component {
   
   handleChange = (html) =>  {
       this.setState({ editorHtml: html });
+      this.props.handleEditorChange(html);
   }
   
   render () {
