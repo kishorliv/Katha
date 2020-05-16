@@ -66,7 +66,15 @@ describe("Testing /users route", () => {
 
     test("Succeeds with valid request(if userId is found)", async (done) => {
         const res =  await request(app)
-            .get("/users/5e9ee95ca2df3c36db7d9a71")
+            .get("/users/5eb809e232279973b2d0dfaa")
+            .expect('Content-Type', /json/);
+            done();
+            console.log(res.text);
+        });
+
+    test("Succeeds with valid request", async (done) => {
+        const res =  await request(app)
+            .get("/users/5eb809e232279973b2d0dfaa/posts")
             .expect('Content-Type', /json/);
             done();
             console.log(res.text);
@@ -82,7 +90,7 @@ describe("Testing /users route", () => {
 
     test("Succeeds with valid inputs", async (done) => {
         const res =  await request(app)
-            .patch("/users/5e9ee95ca2df3c36db7d9a72/update")
+            .patch("/users/5eb809e232279973b2d0dfaa/update")
             .send(updateData)
             .expect('Content-Type', /json/);
             done();
