@@ -40,7 +40,7 @@ function create(req, res, next){
 
 function getUserPosts(req, res, next){
     userService.getUserPosts(req.params.userId)
-    .then(posts => res.send(posts))
+    .then(posts => posts ? res.send(posts) : res.status(404).send({message: 'Could not get user posts!'}))
     .catch(err => next(err));
 }
 
