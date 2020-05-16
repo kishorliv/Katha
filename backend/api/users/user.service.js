@@ -11,7 +11,7 @@ module.exports = {
 
 async function create(userData){
     if(await User.findOne({email: userData.email})){
-        throw new Error('User with same email already exists!');
+        throw 'User with same email already exists!';
     }
     const user = new User(userData);
     await user.save();
@@ -42,7 +42,7 @@ async function updateUser(id, userData){
         {$set: {...userData}},
         {new: true},
         (err, user) => {
-            if(err) throw new Error('Could not update user with id: ', id);
+            if(err) throw 'Could not update user with id: '+ id;
         }
     );
 }

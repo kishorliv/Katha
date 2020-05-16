@@ -13,12 +13,12 @@ module.exports = {
 // Assumption: userId field(user's document id) is sent in req.body
 async function create(postData){
     if(await Post.findOne({title: postData.title})){
-        throw new Error('Post with same title already exists!');
+        throw 'Post with same title already exists!';
     }
     // find the actual user(user id is sent in req.body)
     const user = await User.findById(postData.userId);
     if(user === null || user === undefined) {
-        throw new Error('Cannot find user with given user id while creating the post!');
+        throw 'Cannot find user with given user id while creating the post!';
     }  
 
     // create new post
@@ -50,7 +50,7 @@ async function getByTitle(title){
         console.log('post: ', post);
         return post;
     }else{
-        throw new Error('Post with the given title cannot be fetched!');
+        throw 'Post with the given title cannot be fetched!';
     }
 }
 
@@ -60,7 +60,7 @@ async function updatePost(id, postData){
         {$set: {...postData}},
         {new: true},
         (err, post) => {
-            if(err) throw new Error('Could not update user with id: ', id);
+            if(err) throw 'Could not update user with id: ' + id;
         }
     );
 }
