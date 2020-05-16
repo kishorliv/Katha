@@ -6,10 +6,10 @@ const Form = ({
                 handleSubmit,
                 title, 
                 description,
-                author,
                 tags,
                 content,
-                handleChange 
+                handleChange,
+                getContentFromEditor
 }) => {
     return(
         <div>
@@ -24,7 +24,7 @@ const Form = ({
                 <br /><br />
                 <label>Write</label>
                 <div>
-                    <Editor content={content} placeholder={'Start writing here...'} />
+                    <Editor content={content} getContentFromEditor={getContentFromEditor} placeholder={'Start writing here...'} />
                 </div>
                 <br /><br />
                 <label>Tags</label>

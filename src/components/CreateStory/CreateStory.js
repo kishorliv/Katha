@@ -5,7 +5,6 @@ import { Form } from './Form';
 import { apiEndpoint } from '../../constants/urls';
 import { AuthUserContext } from '../Session';
 
-
 class CreateStoryBase extends React.Component{
     constructor(props){
         super(props);
@@ -17,10 +16,13 @@ class CreateStoryBase extends React.Component{
             authId: "", //firebase auth id
             userId: "", // mongoose user schema id 
             error: null,
-            loading: false
+            loading: false,
         };
     }
 
+    getContentFromEditor = (content) => {
+        this.setState({content: content});
+    };
 
     componentDidMount() {
         this.setState({
@@ -52,9 +54,6 @@ class CreateStoryBase extends React.Component{
             loading: true
         });
 
-        // TODO: POST api call to add data
-        //check this.props.location.pathname. If it contains edit then send PUT request, else send POST req.
-
         // get user by authId first to send userId in the request
         axios.get(apiEndpoint + '/users/authId/' + authId)
              .then((user) => {
@@ -66,39 +65,38 @@ class CreateStoryBase extends React.Component{
                 const postData = {
                     title: title,
                     description: description,
-                    contentHtml: '<p>get this content from somewhere maybe localstorage</p>',
+                    contentHtml: this.state.content,
                     tags: ['google', 'people'],
                     userId: user.data._id
                 }
-                console.log(postData);
-                axios.post(apiEndpoint + '/posts/create', postData)
-                    .then(() => {
+                console.log('Data just before posting: ', postData);
+
+                const url = apiEndpoint + '/posts/create';
+                axios.post(url, postData)
+                    .then((res) => {
                         this.setState({
                             loading: false
                         });
-                        console.log('Story posted successfully.');
+                        console.log('Story posted successfully.: ', res);
                     })
                     .catch((error) => {
                         this.setState({
-                            error: error,
-                            loading: false
+                            loading: false,
+                            error: error.response.data.message
                         });
-                        console.log('Post story error: ', error);
+                        console.log('Post story error: ', error.response.data.message);
                     });
 
              })
              .catch((error) => {
                  this.setState({
-                     error: error,
-                     loading: false
+                     loading: false,
+                     error: error.response.data.message
                  });
-                 console.log('Cannot fetch user by authId: ', error);
+                 console.log('Cannot fetch user by authId error: ', error);
              });
 
-
-
         event.preventDefault();
-        console.log('Submitted.')
     };
 
     handleChange = (e) => {
@@ -119,9 +117,10 @@ class CreateStoryBase extends React.Component{
                     tags={(tags)}
                     content={content}
                     handleChange={this.handleChange}
+                    getContentFromEditor={this.getContentFromEditor}
                     />
                 {loading && <p>Loading...</p>}
-                {error && <p>Sorry, could not create story.</p>}
+                {error && <p>Sorry, could not create story. Error: {error}</p>}
             </Fragment>
         );
     }
