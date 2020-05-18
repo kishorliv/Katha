@@ -5,13 +5,13 @@ let Post = new Schema({
     title: {
         type: String,
         trim: true,
-        minLength: 3,
+        minlength: 3,
         required: [true, 'Title is required(Min. 3 chars).']
     },
     description: {
         type: String,
         trim: true,
-        minLength: 3,
+        minlength: 3,
         required: [true, 'Description is required(Min. 3 chars).']
     },
     user: { 
@@ -20,7 +20,7 @@ let Post = new Schema({
     },
     contentHtml: {
         type: String,
-        minLength: 1,
+        minlength: 1,
         required: [true, 'Content is required(Min. 1 char).']
     },
     tags: [String]

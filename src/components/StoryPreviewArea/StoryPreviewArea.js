@@ -1,6 +1,8 @@
 import React, { Fragment} from 'react';
+import axios from 'axios';
 
 import { Preview } from './Preview';
+import { apiEndpoint } from '../../constants/urls';
 
 
 /**
@@ -10,28 +12,44 @@ class StoryPreviewArea extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            title: '',
-            htmlString: ''
+            htmlString: '',
+            loading: false,
+            error: null
         };
     }
 
     componentDidMount(){
         const title = this.props.match.params.title;
-        // TODO: api call to get content or htmlstring based on the title
-        // ....
-        const htmlString = `<h1>Title: ${title}</h2><u>I am the story. You read.</u>`
-        // ....
 
-        this.setState({
-            title: title,
-            htmlString: htmlString
+        this.setState({ 
+            loading: true 
         });
+
+        axios.get(apiEndpoint + '/posts/title/' + title)
+             .then((story) => {
+                 console.log(story);
+                 this.setState({ 
+                     htmlString: story.data.contentHtml,
+                     loading: false
+                    });
+             })
+             .catch((error) => {
+                 this.setState({ 
+                     error: error,
+                     loading: false
+                 });
+                 console.log('Fetch story by title error: ', error);
+             });
     }
 
     render(){
+        const { htmlString, loading, error } = this.state;
+
         return(
             <Fragment>
-                <Preview htmlString={this.state.htmlString} />
+                <Preview htmlString={htmlString} />
+                {loading && <p>Loading...</p>}
+                {error && <p>Sorry, could not fetch stories.</p>}
             </Fragment>
         );
     }

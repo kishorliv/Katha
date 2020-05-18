@@ -4,13 +4,14 @@ module.exports = {
     create,
     getAll,
     getById,
+    getByAuthId,
     getUserPosts,
     updateUser
 };
 
 async function create(userData){
     if(await User.findOne({email: userData.email})){
-        throw new Error('User with same email already exists!');
+        throw 'User with same email already exists!';
     }
     const user = new User(userData);
     await user.save();
@@ -26,6 +27,11 @@ async function getById(id){
     return await User.findById(id).populate('posts');
 }
 
+// returns user by authId(firebase)
+async function getByAuthId(authId){
+    return await User.findOne({ authId: authId});
+}
+
 async function getUserPosts(id){
     return await User.findById(id).select('posts').populate('posts');
 }
@@ -36,7 +42,7 @@ async function updateUser(id, userData){
         {$set: {...userData}},
         {new: true},
         (err, user) => {
-            if(err) throw new Error('Could not update user with id: ', id);
+            if(err) throw 'Could not update user with id: '+ id;
         }
     );
 }

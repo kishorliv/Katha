@@ -5,8 +5,8 @@ const User = new Schema({
     fullName: {
         type: String,
         trim: true,
-        minLength: 3,
-        maxLength: 50,
+        minlength: 3,
+        maxlength: 50,
         validate: {
             validator: function(v){
                 return /^[a-zA-Z].*[\s\.]*$/.test(v);

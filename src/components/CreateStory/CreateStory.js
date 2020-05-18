@@ -1,44 +1,160 @@
-import React from 'react';
-import { Form } from './Form';
+import React, { Fragment } from 'react';
+import axios from 'axios';
 
-class CreateStory extends React.Component{
+import { Form } from './Form';
+import { apiEndpoint } from '../../constants/urls';
+import { AuthUserContext } from '../Session';
+
+class CreateStoryBase extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             title: "",
             description: "",
-            author: "",
-            tags: "",
+            tags: [],
             content: "",
+            authId: "", //firebase auth id
+            userId: "", // mongoose user schema id 
+            error: null,
+            loading: false,
+            edit: false,
+            editPostId: null, // id of the post to be edited
         };
     }
 
+    getContentFromEditor = (content) => {
+        this.setState({content: content});
+    };
 
     componentDidMount() {
-        const {id} = this.props.match.params;
-        if(id !== undefined){
-            console.log("edit"+id);
-            this.setState({
-                title: "Post1",
-                description: "This is a post to be edited",
-                author: "mahesh",
-                tags: "nepal blog",
-                content: "<h1>Welcome</h1><p>Hello Bye!</p>"
-            });
+        this.setState({
+            authId: this.props.authUser.uid
+        });
+
+
+        console.log('this.props: ', this.props);
+        const { title } = this.props.match.params;
+        console.log('title before condition: ', title);
+        
+        if(title !== undefined && title !== null){
+            this.setState({edit: true});
+            console.log('inside get by title: ', title);
+            // get post by title
+            axios.get(apiEndpoint + '/posts/title/' + title)
+                 .then((post) => {
+                    console.log('Postyyyy: ', post);
+                    this.setState({
+                        title: post.data.title,
+                        description: post.data.description,
+                        tags: post.data.tags,
+                        content: post.data.contentHtml,  
+                        editPostId: post.data._id          
+                    });
+
+                    })
+                 .catch((error) => console.log('Get post by title error: ', error));
         }
-        else{
-            console.log("CREATE");
-        }
-        //fetch api data and update state data accordingly
     }
 
 
     handleSubmit = (event) => {
-        // TODO: POST api call to add data
-        //check this.props.location.pathname. If it contains edit then send PUT request, else send POST req.
+        const { authId, userId, title, description, content, tags, loading } = this.state;
+
+        this.setState({
+            loading: true
+        });
+
+        // if edit is true, update the post otherwise create the post
+        if(this.state.edit){
+            // get user by authId first to send userId in the request
+            axios.get(apiEndpoint + '/users/authId/' + authId)
+            .then((user) => {
+                console.log('Get user by authid response: ', user);
+                this.setState({
+                    userId: user.data._id
+                });
+
+                const updateData = {
+                    title: this.state.title,
+                    description: this.state.description,
+                    content: this.state.content,
+                    tags: this.state.tags,
+                    userId: user.data._id
+                }
+                console.log('Data just before updating: ', updateData);
+
+                const url = apiEndpoint + '/posts/' + this.state.editPostId + '/update';
+                axios.patch(url, updateData)
+                    .then((res) => {
+                        this.setState({
+                            loading: false
+                        });
+                        console.log('Story updated successfully.: ', res);
+                    })
+                    .catch((error) => {
+                        this.setState({
+                            loading: false,
+                            error: error.response.data.message
+                        });
+                        console.log('Update story error: ', error.response.data.message);
+                    });
+
+            })
+            .catch((error) => {
+                this.setState({
+                    loading: false,
+                    error: error.response.data.message
+                });
+                console.log('Cannot fetch user by authId error: ', error);
+            });
+
+
+        }
+        else{
+            // get user by authId first to send userId in the request
+            axios.get(apiEndpoint + '/users/authId/' + authId)
+                 .then((user) => {
+                     console.log('Get user by authid response: ', user);
+                     this.setState({
+                         userId: user.data._id
+                     });
+    
+                    const postData = {
+                        title: title,
+                        description: description,
+                        contentHtml: this.state.content,
+                        tags: ['google', 'people'],
+                        userId: user.data._id
+                    }
+                    console.log('Data just before posting: ', postData);
+    
+                    const url = apiEndpoint + '/posts/create';
+                    axios.post(url, postData)
+                        .then((res) => {
+                            this.setState({
+                                loading: false
+                            });
+                            console.log('Story posted successfully.: ', res);
+                        })
+                        .catch((error) => {
+                            this.setState({
+                                loading: false,
+                                error: error.response.data.message
+                            });
+                            console.log('Post story error: ', error.response.data.message);
+                        });
+    
+                 })
+                 .catch((error) => {
+                     this.setState({
+                         loading: false,
+                         error: error.response.data.message
+                     });
+                     console.log('Cannot fetch user by authId error: ', error);
+                 });
+        }
+
         event.preventDefault();
-        console.log('Submitted.');
-        console.log(this.state);
     };
 
     handleChange = (e) => {
@@ -48,19 +164,32 @@ class CreateStory extends React.Component{
     }
 
     render(){
-        console.log(this.state);
+        const { loading, error, title, description, tags, content } = this.state;
+
         return(
-            <Form 
-                handleSubmit={this.handleSubmit} 
-                title={this.state.title}
-                description={this.state.description}
-                author={this.state.author}
-                tags={this.state.tags}
-                content={this.state.content}
-                handleChange={this.handleChange}
-                />
+            <Fragment>
+                <Form 
+                    handleSubmit={this.handleSubmit} 
+                    title={title}
+                    description={description}
+                    tags={(tags)}
+                    content={content}
+                    handleChange={this.handleChange}
+                    getContentFromEditor={this.getContentFromEditor}
+                    />
+                {loading && <p>Loading...</p>}
+                {error && <p>Sorry, could not create story. Error: {error}</p>}
+            </Fragment>
         );
     }
 }
 
+const CreateStory = (props) => (
+    <AuthUserContext.Consumer>
+    {authUser => <CreateStoryBase {...props} authUser={authUser} />}
+    </AuthUserContext.Consumer>
+);
+
 export { CreateStory };
+
+  

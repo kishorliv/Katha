@@ -1,76 +1,129 @@
 import React from 'react';
+import axios from 'axios';
+import { Redirect } from 'react-router';
 
 import { Story } from './Story';
+import { apiEndpoint } from '../../constants/urls';
 import LogoImage from '../../assets/icons/logo.png';
+import { AuthUserContext } from '../Session';
 
 
-const stories = [
-    {
-        "title": "this is a title",
-        "text": "lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem"
-    },
-    {
-        "title": "comeon",
-        "text": "lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem lorem ipsum dolor is this dolor emet amet corona oh my lorem"
-    },
-    {
-        "title": "this is a dtitle",
-        "text": "lorem ipsum dolor amet what the fudge is this dolor emet amet corona oh my lorem"
-    },
-    {
-        "title": "my titled",
-        "text": "lorem ipsum dolor is this dolor emet amet corona oh my lorem"
-    },
-];
 
 /**
  * Component that renders list of story cards.
  */
 
-class StoryList extends React.Component{
+class StoryListBase extends React.Component{
+    _isMounted = false;
+
     constructor(props){
         super(props);
         this.state = {
-            linkTo: [],
             stories: [],
-            imgs: []
+            imgs: [],
+            error: null,
+            loading: false,
+            userId: null
         };
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
+    
     componentDidMount(){
-        // TODO: api call to fetch stories, might not need to fetch the whole html, just the props
-        // then the content can be fetched by sending GET to getPostByTitle method maybe, each title is unique
-        this.state.stories = []; //fill this
-        this.state.linkTo = this.state.stories.map((story) => `/stories/${story.title}`);
-        this.state.imgs = this.state.stories.map((story) => null); // find one image from the post or return a default image
+        this._isMounted = true;
+
+        this.setState({ 
+            loading: true,
+        });
+        
+        const authId = this.props.authUser.uid;
+
+        // get user by authId first to send userId in the request
+        axios.get(apiEndpoint + '/users/authId/' + authId)
+            .then((user) => {
+                console.log('Get user by authid response: ', user);
+                if (this._isMounted){
+                    this.setState({
+                        userId: user.data._id
+                    });
+                }
+                // TODO: api call to fetch stories, might not need to fetch the whole html, just the required props
+                axios.get(apiEndpoint + '/users/' + this.state.userId + '/posts')
+                    .then((stories) => {
+                        if (this._isMounted) {
+                            this.setState({ 
+                                stories: stories.data.posts,
+                                imgs: [], // find one image from the post or return a default image
+                                loading: false
+                                });
+                        }
+                    })
+                    .catch((error) => {
+                        if (this._isMounted){
+                            this.setState({ 
+                                error: error,
+                                loading: false
+                                });
+                        }
+                        console.log('Fetch story error: ', error);
+                    });
+            })
+            .catch((error) => {
+                if (this._isMounted){
+                    this.setState({ error: error });
+                }
+                console.log('Cannot fetch user by authId error: ', error);
+            })
+    }
+
+    // gets title of the story when delete button is clicked
+    handleSendTitle = ( title ) => {
+
+        axios.delete(apiEndpoint + '/posts/' + title + '/delete')
+             .then((res) => {
+                 console.log('Post deleted.:  ', res.data.message);
+                })
+             .catch((error) => {
+                if (this._isMounted){
+                    this.setState({ error : error});
+                }
+                console.log('Cannot delete the post error: ', error);
+             });
     }
 
     render(){
+        const { error, stories, loading } = this.state;
+
         return(
             <div className="container">
                 <div className="row">
-                    {/* { this.state.stories.map((story, i) => 
-                        <Story 
-                            img={this.state.imgs[i]} 
-                            title={story.title} 
-                            text={story.text} 
-                            linkTo={this.state.stories[i]} 
-                            key={stories.title} 
-                        />
-                    )} */}
-                    { stories.map((story, i) => 
-                        <Story 
-                            img={LogoImage} 
-                            title={story.title} 
-                            text={story.text} 
-                            linkTo={`/stories/${story.title}`} 
-                            key={story.title} 
-                        />
-                    )}
+                    { stories.map((story) => {
+                        return(
+                            <Story 
+                                img={LogoImage} 
+                                title={story.title} 
+                                text={story.description} 
+                                linkToRead={`/stories/${story.title}`} 
+                                linkToEdit={`/edit/${story.title}`}
+                                sendTitle={this.handleSendTitle}
+                                key={story.title} 
+                            />
+                        );
+                    })}
+                    {loading && <p>Loading...</p>}
+                    {error && <p>Sorry, could not fetch stories.</p>}
                 </div>
             </div>
         );
     }
 }
+
+const StoryList = (props) => (
+    <AuthUserContext.Consumer>
+    {authUser => <StoryListBase {...props} authUser={authUser} />}
+    </AuthUserContext.Consumer>
+);
 
 export { StoryList };

@@ -4,11 +4,11 @@ const app = require('../../app');
 // test data
 // Assumption: userId is passed in req.body while creating posts
 const postData = {
-  title: "This is a test",
-  description: "sdfdsf",
-  contentHtml: "<p>lorem slkjf dfsdsdf sdfsdfsd sdffjlas dfas skfjlaks skdfj asfj lasfj alskdjf laskdfjklas dflkjas df asdlkf</p>",
-  tags: ['nodejs', 'people'],
-  userId: "5e9eeb7666f33b3b79dd6e84"
+  title: "This is fdg test",
+  description: "ghjhggjgh",
+  contentHtml: "<p>lorem as dflkjas df asdlkf</p>",
+  tags: ['mozilla', 'people'],
+  userId: "5eb809e232279973b2d0dfaa"
 }
 
 const updateData = {
@@ -45,7 +45,7 @@ describe("Testing /posts route", () => {
     });
       
     test("It responds with the newly created post", async (done) => {
-      const title = "This is a test";
+      const title = "mui mui mui";
       const path = "/posts/title/" + title;
       const res =  await request(app)
         .get(path)
@@ -58,6 +58,14 @@ describe("Testing /posts route", () => {
       const res =  await request(app)
           .patch("/posts/5e9eebf705492d3ce416b60f/update")
           .send(updateData)
+          .expect('Content-Type', /json/);
+          done();
+          console.log(res.text);
+    });
+
+    test("Succeeds with valid inputs", async (done) => {
+      const res =  await request(app)
+          .delete("/posts/my my my/delete")
           .expect('Content-Type', /json/);
           done();
           console.log(res.text);

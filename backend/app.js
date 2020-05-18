@@ -10,9 +10,11 @@ const postRoutes = require('./api/posts/post.controller');
 const userRoutes = require('./api/users/user.controller');
 require('./_db/db');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cors());
+// setting maximum size of a request to 30mb
+app.use(bodyParser.json({limit: '30mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '30mb', extended: true}))
+
+app.use(cors()); // TODO: don't use cors in production, run api and frontend in the same server
 
 
 // api routes
