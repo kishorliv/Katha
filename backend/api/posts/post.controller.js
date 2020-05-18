@@ -9,6 +9,7 @@ router.get('/:postId', getById);
 router.get('/title/:title', getByTitle);
 router.post('/create', create);
 router.patch('/:postId/update', updatePost);
+router.delete('/:title/delete', deletePost);
 
 module.exports = router;
 
@@ -41,5 +42,11 @@ function create(req, res, next){
 function updatePost(req, res, next){
     postService.updatePost(req.params.postId, req.body)
     .then((post) => post ? res.status(200).send(post) : res.status(400).send({message: 'Post cannot be updated!'}))
+    .catch((err) => next(err));
+}
+
+function deletePost(req, res, next){
+    postService.deletePost(req.params.title)
+    .then(() => res.status(200).send({message: 'Post deleted'}))
     .catch((err) => next(err));
 }

@@ -45,7 +45,7 @@ describe("Testing /posts route", () => {
     });
       
     test("It responds with the newly created post", async (done) => {
-      const title = "This is a test";
+      const title = "mui mui mui";
       const path = "/posts/title/" + title;
       const res =  await request(app)
         .get(path)
@@ -58,6 +58,14 @@ describe("Testing /posts route", () => {
       const res =  await request(app)
           .patch("/posts/5e9eebf705492d3ce416b60f/update")
           .send(updateData)
+          .expect('Content-Type', /json/);
+          done();
+          console.log(res.text);
+    });
+
+    test("Succeeds with valid inputs", async (done) => {
+      const res =  await request(app)
+          .delete("/posts/my my my/delete")
           .expect('Content-Type', /json/);
           done();
           console.log(res.text);

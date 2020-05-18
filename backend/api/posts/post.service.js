@@ -6,7 +6,8 @@ module.exports = {
     getAll,
     getById,
     getByTitle,
-    updatePost
+    updatePost,
+    deletePost
 };
 
 // TODO: sometimes this function is taking more time than usual, test it properly
@@ -47,7 +48,6 @@ async function getById(id){
 async function getByTitle(title){
     const post = await Post.findOne({title: title});
     if(post){
-        console.log('post: ', post);
         return post;
     }else{
         throw 'Post with the given title cannot be fetched!';
@@ -63,4 +63,10 @@ async function updatePost(id, postData){
             if(err) throw 'Could not update user with id: ' + id;
         }
     );
+}
+
+async function deletePost(title){
+    return await Post.findOneAndRemove({ title: title }, (err) => {
+        if (err) throw 'Could not delete the post with title: ' + title;
+    });
 }
