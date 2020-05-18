@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 import { Story } from './Story';
 import { apiEndpoint } from '../../constants/urls';
@@ -7,11 +8,14 @@ import LogoImage from '../../assets/icons/logo.png';
 import { AuthUserContext } from '../Session';
 
 
+
 /**
  * Component that renders list of story cards.
  */
 
 class StoryListBase extends React.Component{
+    _isMounted = false;
+
     constructor(props){
         super(props);
         this.state = {
@@ -19,10 +23,17 @@ class StoryListBase extends React.Component{
             imgs: [],
             error: null,
             loading: false,
-            userId: null        };
+            userId: null
+        };
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
     
     componentDidMount(){
+        this._isMounted = true;
+
         this.setState({ 
             loading: true,
         });
@@ -33,32 +44,53 @@ class StoryListBase extends React.Component{
         axios.get(apiEndpoint + '/users/authId/' + authId)
             .then((user) => {
                 console.log('Get user by authid response: ', user);
-                this.setState({
-                    userId: user.data._id
-                });
-   
+                if (this._isMounted){
+                    this.setState({
+                        userId: user.data._id
+                    });
+                }
                 // TODO: api call to fetch stories, might not need to fetch the whole html, just the required props
                 axios.get(apiEndpoint + '/users/' + this.state.userId + '/posts')
                     .then((stories) => {
-                        console.log(stories);
-                        this.setState({ 
-                            stories: stories.data.posts,
-                            imgs: [], // find one image from the post or return a default image
-                            loading: false
-                            });
+                        if (this._isMounted) {
+                            this.setState({ 
+                                stories: stories.data.posts,
+                                imgs: [], // find one image from the post or return a default image
+                                loading: false
+                                });
+                        }
                     })
                     .catch((error) => {
-                        this.setState({ 
-                            error: error,
-                            loading: false
-                            });
+                        if (this._isMounted){
+                            this.setState({ 
+                                error: error,
+                                loading: false
+                                });
+                        }
                         console.log('Fetch story error: ', error);
                     });
             })
             .catch((error) => {
-                this.setState({ error: error });
+                if (this._isMounted){
+                    this.setState({ error: error });
+                }
                 console.log('Cannot fetch user by authId error: ', error);
             })
+    }
+
+    // gets title of the story when delete button is clicked
+    handleSendTitle = ( title ) => {
+
+        axios.delete(apiEndpoint + '/posts/' + title + '/delete')
+             .then((res) => {
+                 console.log('Post deleted.:  ', res.data.message);
+                })
+             .catch((error) => {
+                if (this._isMounted){
+                    this.setState({ error : error});
+                }
+                console.log('Cannot delete the post error: ', error);
+             });
     }
 
     render(){
@@ -74,15 +106,14 @@ class StoryListBase extends React.Component{
                                 title={story.title} 
                                 text={story.description} 
                                 linkToRead={`/stories/${story.title}`} 
-                                linkToEdit={`/stories/${story.title}`}
-                                linkToDelete={`/stories/${story.title}`}
+                                linkToEdit={`/edit/${story.title}`}
+                                sendTitle={this.handleSendTitle}
                                 key={story.title} 
                             />
                         );
                     })}
                     {loading && <p>Loading...</p>}
                     {error && <p>Sorry, could not fetch stories.</p>}
-                    {stories.length === 0 && <p>You don't have any story yet!</p>}
                 </div>
             </div>
         );

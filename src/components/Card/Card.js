@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Card = ({ img, title, text, linkToRead, linkToEdit, linkToDelete }) => {
+const Card = ({ img, title, text, linkToRead, linkToEdit, sendTitle }) => {
     return(
         <div className="col-lg-4 mb-4">
             <div className="card Card-wrapper">
@@ -21,7 +21,7 @@ const Card = ({ img, title, text, linkToRead, linkToEdit, linkToDelete }) => {
                         </div>
                     </Link>
                     &nbsp;
-                    <Link to={linkToDelete} >
+                    <Link to='/dashboard' onClick={() => sendTitle(title)} >
                         <div className="btn btn-outline-danger btn-sm float-right">
                             Delete
                         </div>
